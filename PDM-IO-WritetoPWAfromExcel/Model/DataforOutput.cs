@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PDM_IO_WriteToPWA_ReadXLSX.Model
+namespace PDM.IO.PWA.Tasks.Model
 {
     public class DataforOutput
     {

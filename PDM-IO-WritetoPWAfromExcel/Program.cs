@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using DocumentFormat.OpenXml;
+
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System.Collections.Specialized;
 using System.Text.RegularExpressions;
-using PDM_IO_WriteToPWA_ReadXLSX.Model;
 
 using Newtonsoft.Json;
 
 using Microsoft.ProjectServer.Client;
 using Microsoft.SharePoint.Client;
 
-using System.Security;
 using System.Net;
-
-using PDM.IO.PWA.Login;
-using Microsoft.Online.SharePoint.MigrationCenter.Common;
 
 using System.Globalization;
 
-namespace PDM.IO.PWA.TaskECF
+namespace PDM.IO.PWA.Tasks
 {
     class Program
     {
@@ -38,14 +32,14 @@ namespace PDM.IO.PWA.TaskECF
             string customFieldNameSource = "Draft_TaskCountEstimatedCost";
             string customFieldNameTarget = "TaskCountEstimatedCost";
 
-            DataforOutput dataExport = new DataforOutput
+           Model.DataforOutput dataExport = new Model.DataforOutput
             {
-                data = new List<dataExportItem>()
+                data = new List<Model.dataExportItem>()
             };
 
-            DataforOutput dataImport = new DataforOutput
+            Model.DataforOutput dataImport = new Model.DataforOutput
             {
-                data = new List<dataExportItem>()
+                data = new List<Model.dataExportItem>()
             };
 
             string DataJSON = "";
@@ -56,10 +50,10 @@ namespace PDM.IO.PWA.TaskECF
             WorkPWA(ref dataImport, ref customFieldNameTarget);
         }
 
-        static void WorkPWA(ref DataforOutput dataImport, ref string customFieldNameTarget)
+        static void WorkPWA(ref Model.DataforOutput dataImport, ref string customFieldNameTarget)
         {
             // Connect to Sharepoint using cookies
-            var cookies = WebLogin.GetWebLoginCookie(new Uri(SiteURL));
+            var cookies = PDM.IO.PWA.Login.WebLogin.GetWebLoginCookie(new Uri(SiteURL));
             projContext.ExecutingWebRequest += delegate (object sender, WebRequestEventArgs e)
             {
                 e.WebRequestExecutor.WebRequest.CookieContainer = new CookieContainer();
@@ -70,7 +64,7 @@ namespace PDM.IO.PWA.TaskECF
             WriteToPWATaskECF(ref dataImport, customFieldNameTarget);
         }
 
-        private static void WriteToPWATaskECF(ref DataforOutput dataImport, string customFieldNameTarget)
+        private static void WriteToPWATaskECF(ref Model.DataforOutput dataImport, string customFieldNameTarget)
         {
             // Get Project ID. TODO: Group records by project to write data by project groups
             string sprojGUID = dataImport.data.FirstOrDefault().ProjectID; // "0ee2dab3-b6bd-e911-8159-3085a9af61fc";
@@ -112,17 +106,17 @@ namespace PDM.IO.PWA.TaskECF
             projContext.ExecuteQuery();
         }
 
-        static void ReadFromJson(ref DataforOutput dataImport, ref string DataJSON)
+        static void ReadFromJson(ref Model.DataforOutput dataImport, ref string DataJSON)
         {
-            dataImport = JsonConvert.DeserializeObject<DataforOutput>(DataJSON);
+            dataImport = JsonConvert.DeserializeObject<Model.DataforOutput>(DataJSON);
         }
 
-        static void WriteToJson(ref DataforOutput dataExport, ref string DataJSON)
+        static void WriteToJson(ref Model.DataforOutput dataExport, ref string DataJSON)
         {
             DataJSON = JsonConvert.SerializeObject(dataExport);
         }
 
-        static void ReadExcelTableData(ref DataforOutput dataExport, string fileName, string sheetName, string dataTableName, string ProjectFieldName, string TaskFieldName, string customFieldName)
+        static void ReadExcelTableData(ref Model.DataforOutput dataExport, string fileName, string sheetName, string dataTableName, string ProjectFieldName, string TaskFieldName, string customFieldName)
         {
             using (SpreadsheetDocument document = SpreadsheetDocument.Open(fileName, false))
             {
@@ -156,7 +150,7 @@ namespace PDM.IO.PWA.TaskECF
                 // Iterate through filtered rows in table
                 foreach (Row row in workSheet.Descendants<Row>().Where(r => r.RowIndex.Value > startCell && r.RowIndex.Value <= endCell && (r.Hidden == null || r.Hidden.Value != true)))
                 {
-                    dataExportItem itemDataExport = new dataExportItem();
+                    Model.dataExportItem itemDataExport = new Model.dataExportItem();
 
                     foreach (Cell cell in row)
                     {
