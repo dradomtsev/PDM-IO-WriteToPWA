@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDM-IO-WritetoPWA-TaskECF_Excel", "PDM-IO-WritetoPWAfromExcel\PDM-IO-WritetoPWA-TaskECF_Excel.csproj", "{D5851FF2-8DA4-4BE4-A0FA-989779B99E13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDW-IO-PWA-WebLogin", "PDW-IO-PWA-WebLogin\PDW-IO-PWA-WebLogin.csproj", "{13F37D05-B7A0-40C8-BB90-5EB246868530}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D5851FF2-8DA4-4BE4-A0FA-989779B99E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5851FF2-8DA4-4BE4-A0FA-989779B99E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5851FF2-8DA4-4BE4-A0FA-989779B99E13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13F37D05-B7A0-40C8-BB90-5EB246868530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13F37D05-B7A0-40C8-BB90-5EB246868530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13F37D05-B7A0-40C8-BB90-5EB246868530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13F37D05-B7A0-40C8-BB90-5EB246868530}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

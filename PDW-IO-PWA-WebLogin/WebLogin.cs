@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace PWAWebLogin
+namespace PDM.IO.PWA.Login
 {
     /// <summary>
     /// Provides functionality for getting cookie using WebBrowser control.

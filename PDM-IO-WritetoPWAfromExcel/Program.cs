@@ -16,7 +16,7 @@ using Microsoft.SharePoint.Client;
 using System.Security;
 using System.Net;
 
-using PWAWebLogin;
+using PDM.IO.PWA.Login;
 using Microsoft.Online.SharePoint.MigrationCenter.Common;
 
 using System.Globalization;
