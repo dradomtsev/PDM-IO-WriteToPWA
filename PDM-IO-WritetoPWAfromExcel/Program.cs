@@ -20,7 +20,7 @@ namespace PDM.IO.PWA.Tasks
     class Program
     {
         private const string SiteURL = "https://archimatika.sharepoint.com/sites/pwatest";
-        private static ProjectContext projContext = new ProjectContext(SiteURL);
+        private static ProjectContext objContext = new ProjectContext(SiteURL);
         private static readonly CultureInfo invCult = CultureInfo.InvariantCulture;
         static void Main()
         {
@@ -54,7 +54,7 @@ namespace PDM.IO.PWA.Tasks
         {
             // Connect to Sharepoint using cookies
             var cookies = PDM.IO.PWA.Login.WebLogin.GetWebLoginCookie(new Uri(SiteURL));
-            projContext.ExecutingWebRequest += delegate (object sender, WebRequestEventArgs e)
+            objContext.ExecutingWebRequest += delegate (object sender, WebRequestEventArgs e)
             {
                 e.WebRequestExecutor.WebRequest.CookieContainer = new CookieContainer();
                 e.WebRequestExecutor.WebRequest.CookieContainer.SetCookies(new Uri(SiteURL), cookies);
@@ -71,18 +71,18 @@ namespace PDM.IO.PWA.Tasks
             Guid projGUID = Guid.Parse(sprojGUID);
 
             // Get project by ProjectId
-            var projects = projContext.LoadQuery(projContext.Projects.Where(p => p.Id == projGUID).Include(p => p.Id, p => p.Name));
-            projContext.Load(projContext.CustomFields);
-            projContext.ExecuteQuery();
+            var projects = objContext.LoadQuery(objContext.Projects.Where(p => p.Id == projGUID).Include(p => p.Id, p => p.Name));
+            objContext.Load(objContext.CustomFields);
+            objContext.ExecuteQuery();
             var project = projects.FirstOrDefault();
 
             // Get custom field internal name
-            var cfInternalName = projContext.CustomFields.FirstOrDefault(q => q.Name == customFieldNameTarget).InternalName;
+            var cfInternalName = objContext.CustomFields.FirstOrDefault(q => q.Name == customFieldNameTarget).InternalName;
 
             // Checkout project for modification
             var draftProject = project.CheckOut();
-            projContext.Load(draftProject, p => p.Tasks.Include(t => t.Id, t => t.Name));
-            projContext.ExecuteQuery();
+            objContext.Load(draftProject, p => p.Tasks.Include(t => t.Id, t => t.Name));
+            objContext.ExecuteQuery();
 
             // Get all tasks for project
             var tasks = draftProject.Tasks;
@@ -103,7 +103,7 @@ namespace PDM.IO.PWA.Tasks
 
             // Publish project
             draftProject.Publish(true);
-            projContext.ExecuteQuery();
+            objContext.ExecuteQuery();
         }
 
         static void ReadFromJson(ref Model.DataforOutput dataImport, ref string DataJSON)
