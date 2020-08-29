@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDM-IO-WritetoPWAfromExcel", "PDM-IO-WritetoPWAfromExcel\PDM-IO-WritetoPWAfromExcel.csproj", "{D5851FF2-8DA4-4BE4-A0FA-989779B99E13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDM-IO-WritetoPWA-TaskECF_Excel", "PDM-IO-WritetoPWAfromExcel\PDM-IO-WritetoPWA-TaskECF_Excel.csproj", "{D5851FF2-8DA4-4BE4-A0FA-989779B99E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

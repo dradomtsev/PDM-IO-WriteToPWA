@@ -19,16 +19,18 @@ using System.Net;
 using PWAWebLogin;
 using Microsoft.Online.SharePoint.MigrationCenter.Common;
 
-namespace PDM_IO_WriteToPWA_ReadXLSX
+using System.Globalization;
+
+namespace PDM.IO.PWA.TaskECF
 {
     class Program
     {
-        private static readonly string SiteURL = "https://archimatika.sharepoint.com/sites/pwatest";
+        private const string SiteURL = "https://archimatika.sharepoint.com/sites/pwatest";
         private static ProjectContext projContext = new ProjectContext(SiteURL);
-
-        static void Main(string[] args)
+        private static readonly CultureInfo invCult = CultureInfo.InvariantCulture;
+        static void Main()
         {
-            string fileName = @"C:\Users\d.radomtsev\Desktop\PRJ-Tasks-CustomFields.xlsx";
+            string fileName = @"C:\PRJ-Tasks-CustomFields.xlsx";
             string sheetName = "Tasks";
             string dataTableName = "Tasks";
             string ProjectFieldName = "ProjectId";
@@ -36,11 +38,15 @@ namespace PDM_IO_WriteToPWA_ReadXLSX
             string customFieldNameSource = "Draft_TaskCountEstimatedCost";
             string customFieldNameTarget = "TaskCountEstimatedCost";
 
-            DataforOutput dataExport = new DataforOutput();
-            dataExport.data = new List<dataExportItem>();
+            DataforOutput dataExport = new DataforOutput
+            {
+                data = new List<dataExportItem>()
+            };
 
-            DataforOutput dataImport = new DataforOutput();
-            dataImport.data = new List<dataExportItem>();
+            DataforOutput dataImport = new DataforOutput
+            {
+                data = new List<dataExportItem>()
+            };
 
             string DataJSON = "";
 
@@ -135,14 +141,16 @@ namespace PDM_IO_WriteToPWA_ReadXLSX
                 uint startCell = GetRowIndex(cellRange.Value.Split(':')[0]);
                 uint endCell = GetRowIndex(cellRange.Value.Split(':')[1]);
 
+                
+
                 // Set Cell names
-                Cell ProjectIDHeaderCell = workSheet.Descendants<Row>().Where(r => r.RowIndex.Value == startCell).FirstOrDefault().Elements<Cell>().Where(c => String.Compare(GetCellValuebyID(ref sharedStringTable, Int16.Parse(c.CellValue.Text)), ProjectFieldName, true) == 0).FirstOrDefault();
+                Cell ProjectIDHeaderCell = workSheet.Descendants<Row>().Where(r => r.RowIndex.Value == startCell).FirstOrDefault().Elements<Cell>().Where(c => String.Compare(GetCellValuebyID(ref sharedStringTable, short.Parse(c.CellValue.Text, invCult)), ProjectFieldName, true, invCult) == 0).FirstOrDefault();
                 string ProjectIDHeaderName = GetColumnName(ProjectIDHeaderCell.CellReference.Value);
 
-                Cell TaskIDHeaderCell = workSheet.Descendants<Row>().Where(r => r.RowIndex.Value == startCell).FirstOrDefault().Elements<Cell>().Where(c => String.Compare(GetCellValuebyID(ref sharedStringTable, Int16.Parse(c.CellValue.Text)), TaskFieldName, true) == 0).FirstOrDefault();
+                Cell TaskIDHeaderCell = workSheet.Descendants<Row>().Where(r => r.RowIndex.Value == startCell).FirstOrDefault().Elements<Cell>().Where(c => String.Compare(GetCellValuebyID(ref sharedStringTable, short.Parse(c.CellValue.Text, invCult)), TaskFieldName, true, invCult) == 0).FirstOrDefault();
                 string TaskIDHeaderName = GetColumnName(TaskIDHeaderCell.CellReference.Value);
 
-                Cell customFieldHeaderCell = workSheet.Descendants<Row>().Where(r => r.RowIndex.Value == startCell).FirstOrDefault().Elements<Cell>().Where(c => String.Compare(GetCellValuebyID(ref sharedStringTable, Int16.Parse(c.CellValue.Text)), customFieldName, true) == 0).FirstOrDefault();
+                Cell customFieldHeaderCell = workSheet.Descendants<Row>().Where(r => r.RowIndex.Value == startCell).FirstOrDefault().Elements<Cell>().Where(c => String.Compare(GetCellValuebyID(ref sharedStringTable, short.Parse(c.CellValue.Text, invCult)), customFieldName, true, invCult) == 0).FirstOrDefault();
                 string CustomFieldHeaderName = GetColumnName(customFieldHeaderCell.CellReference.Value);
                 
                 // Iterate through filtered rows in table
@@ -156,11 +164,11 @@ namespace PDM_IO_WriteToPWA_ReadXLSX
 
                         // Write data to internal POCO object
                         if (columnName == ProjectIDHeaderName)
-                            itemDataExport.ProjectID = GetCellValuebyID(ref sharedStringTable, Int16.Parse(cell.CellValue.Text));
+                            itemDataExport.ProjectID = GetCellValuebyID(ref sharedStringTable, short.Parse(cell.CellValue.Text, invCult));
                         if (columnName == TaskIDHeaderName)
-                            itemDataExport.TaskID = GetCellValuebyID(ref sharedStringTable, Int16.Parse(cell.CellValue.Text));
+                            itemDataExport.TaskID = GetCellValuebyID(ref sharedStringTable, short.Parse(cell.CellValue.Text, invCult));
                         if (columnName == CustomFieldHeaderName)
-                            itemDataExport.TaskCountEstimatedCost = float.Parse(cell.CellValue.Text);
+                            itemDataExport.TaskCountEstimatedCost = float.Parse(cell.CellValue.Text, invCult);
                     }
                     // Add data to POCO object
                     dataExport.data.Add(itemDataExport);
@@ -175,7 +183,7 @@ namespace PDM_IO_WriteToPWA_ReadXLSX
             Regex regex = new Regex(@"\d+");
             Match match = regex.Match(cellName);
 
-            return uint.Parse(match.Value);
+            return uint.Parse(match.Value, invCult);
         }
 
         // Given a cell name, parses the specified cell to get the column name.
